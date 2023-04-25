@@ -182,9 +182,10 @@ def get_parking():
   )
 
   for parking in parkings:
-    total['total'] += 0 if parking['total'] is None else parking['total']
-    total['used'] += 0 if parking['total'] is None else 0 if 'used' not in parking else parking['used']
-    total['free'] += 0 if parking['free'] is None else parking['free']
+    if parking['name'] == 'total':
+      total['total'] += 0 if parking['total'] is None else parking['total']
+      total['used'] += 0 if parking['total'] is None else 0 if 'used' not in parking else parking['used']
+      total['free'] += 0 if parking['free'] is None else parking['free']
 
   parkings.append(total)
 

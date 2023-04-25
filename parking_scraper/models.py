@@ -39,3 +39,18 @@ class ParkingUsage(Base):
     def __repr__(self) -> str:
         return f"Parking(id={self.id!r}, name={self.name!r}, city={self.city!r}), \
             total={self.total!r}, used={self.used!r}, free={self.free!r}"
+
+class BikeUsage(Base):
+    __tablename__ = "bike_usage"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    scraped_at: Mapped[datetime]
+
+    station_number: Mapped[Optional[int]]
+    city: Mapped[str]
+    station_name: Mapped[str]
+    status: Mapped[Optional[str]]
+    connected: Mapped[Optional[bool]]
+    bikes: Mapped[Optional[int]]
+    stands: Mapped[Optional[int]]
+    capacity: Mapped[Optional[int]]

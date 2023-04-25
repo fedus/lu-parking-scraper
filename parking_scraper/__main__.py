@@ -1,14 +1,15 @@
 import schedule
 
-from typing import Iterable
+from typing import Iterable, Type
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from datetime import datetime
 from time import sleep
 
-from .models import ParkingUsage, UsageDetail
+from .models import Base, ParkingUsage, UsageDetail, BikeUsage
 from .exceptions import ConfigException
 from .parkings import get_parking
+from .bikes import get_bikes
 from .config import config
 
 db_url = config.get("DB_URL", None)
@@ -18,11 +19,7 @@ if not db_url:
 
 engine = create_engine(db_url, echo=int(config.get("ECHO_SQL", 1)))
 
-def scrape():
-    scraped_at = datetime.now()
-
-    print(f"Scraping at {scraped_at} ...")
-
+def scrape_parkings(scraped_at: datetime):
     return map(lambda raw_usage: ParkingUsage(
         scraped_at=scraped_at,
         name=raw_usage.get("name"),
@@ -37,16 +34,27 @@ def scrape():
         )
     ), get_parking())
 
-def persist(parking_usages: Iterable[ParkingUsage]):
+def scrape_bikes(scraped_at: datetime):
+    return map(lambda raw_usage: BikeUsage(
+        scraped_at=scraped_at,
+        **raw_usage
+    ), get_bikes())
+
+def persist(usage: Iterable[Type[Base]]):
     print("Persisting ...")
 
     with Session(engine) as session:
-        session.add_all(parking_usages)
+        session.add_all(usage)
         session.commit()
 
 def scrape_and_persist():
     try:
-        persist(scrape())
+        scraped_at = datetime.now()
+
+        print(f"Scraping at {scraped_at} ...")
+
+        persist(scrape_parkings(scraped_at))
+        persist(scrape_bikes(scraped_at))
     except Exception as e:
         print(f"Caught exception: {e}")
 
