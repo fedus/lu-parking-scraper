@@ -66,7 +66,6 @@ def get_ettelbruck():
 
   except Exception as e:
     print(e)
-    raise e
     return []
 
   return parkings
@@ -109,13 +108,14 @@ def get_luxembourg():
       if not args.no_details:
         parking['free-detail'] = free_detail
 
-      if parking['total']:
+      if parking['total'] and parking['free']:
         parking['used'] = parking['total'] - parking['free']
         total['used'] += parking['used']
       parkings.append(parking)
 
     parkings.append(total)
-  except:
+  except Exception as e:
+    print(e)
     return []
 
   return parkings
