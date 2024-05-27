@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "parking-scraper"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["Federico Gentile <gentfede+git@gmail.com>"]
 readme = "README.md"
@@ -10,7 +10,6 @@ packages = [{include = "parking_scraper"}]
 python = "^3.11"
 requests = "^2.28.2"
 pyyaml = "^6.0"
-xmltodict = "^0.13.0"
 sqlalchemy = "^2.0.9"
 schedule = "^1.2.0"
 alembic = "^1.10.3"
