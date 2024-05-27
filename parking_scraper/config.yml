@@ -1,7 +1,7 @@
 api:
   parking:
     ettelbruck: https://iot.rms.lu/opendata/parking/ettelbruck
-    luxembourg: https://feed.vdl.lu/circulation/parking/feed.rss
+    luxembourg: https://feed.vdl.lu/circulation/parking/feed.json
     esch:
       data: https://esch.lu/wp-admin/admin-ajax.php?action=esch_parkings
       name: https://esch.lu/wp-admin/admin-ajax.php?action=esch_panels&panel=traffic
