@@ -6,7 +6,6 @@ import os
 import re
 
 import requests
-import xmltodict
 import yaml
 #from bs4 import BeautifulSoup
 
@@ -72,10 +71,7 @@ def get_ettelbruck():
 
 
 def get_luxembourg():
-  raw = xmltodict.parse(
-    requests.get(api['luxembourg']).text,
-    dict_constructor=dict
-  )
+  raw = requests.get(api['luxembourg']).json()
 
   parkings = []
   total = {
@@ -86,23 +82,23 @@ def get_luxembourg():
     'used': 0
   }
   try:
-    for parking_raw in raw['rss']['channel']['item']:
+    for parking_raw in raw.get("parking", {}).values():
       parking = {}
       parking['city'] = 'Luxembourg'
-      parking['name'] = parking_raw['title']
-      if parking_raw['vdlxml:total'] is None:
+      parking['name'] = parking_raw['titre']
+      if parking_raw['total'] is None:
         parking['total'] = None
       else:
-        parking['total'] = int(parking_raw['vdlxml:total'])
+        parking['total'] = int(parking_raw['total'])
         total['total'] += parking['total']
       free_detail = {}
-      if parking_raw['vdlxml:actuel'] is None:
+      if parking_raw['actuel'] is None:
         parking['free'] = None
         free_detail['general'] = None
       else:
-        parking['free'] = int(parking_raw['vdlxml:actuel'])
+        parking['free'] = int(parking_raw['actuel'])
         total['free'] += parking['free']
-        free_detail['general'] = int(parking_raw['vdlxml:actuel'])
+        free_detail['general'] = int(parking_raw['actuel'])
       free_detail['disabled'] = None
       free_detail['ev'] = None
       if not args.no_details:
